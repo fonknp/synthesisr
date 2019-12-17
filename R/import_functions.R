@@ -162,6 +162,10 @@ import_results <- function(directory=NULL, filename=NULL, verbose = TRUE){
   if(!is.null(directory)){import_files <- paste(directory, list.files(path = directory), sep = "")} else if(!is.null(filename)){import_files <- filename}
   if(is.null(directory) & is.null(filename)){stop("No input given. Either directory or filename needs to be provided.")}
 
+  if(retain_all_output==TRUE){
+    search_list <- list()
+  }
+
   import_files <- synthesisr::check_filetypes(import_files)
 
   for(i in 1:length(import_files)){
@@ -177,18 +181,22 @@ import_results <- function(directory=NULL, filename=NULL, verbose = TRUE){
     df <- synthesisr::match_columns(df)
     }
 
-    df <- standardize_df(df)
+    df <- synthesisr::standardize_df(df)
 
     if (i == 1) {
-        search_hits <- df
+        search_hits <- df[,1:17]
       }
       if (i > 1) {
-        search_hits <- rbind(search_hits, df)
+        search_hits <- rbind(search_hits, df[,1:17])
       }
+    if(retain_all_output==TRUE){
+      search_lists[[i]] <- df
+    }
+    }
 
-  }
-
-  return(search_hits)
+  if(retain_all_output==TRUE){
+    return(search_lists)
+  } else{return(search_hits)}
 }
 
 
