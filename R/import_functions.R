@@ -155,17 +155,9 @@ detect_database <- function(df){
 #' @description Given a file or directory, imports and assembles search results
 #' @param directory a path to a directory containing search results to import
 #' @param filename a path to a filename containing search results to import
-#' @param save_dataset if TRUE, saves the full search results to a .csv
-#' @param save_directory the path to a directory where search results will be saved if save_dataset is set to TRUE
 #' @param verbose if TRUE, prints status updates
 #' @return a data frame of assembled search results
-import_results <- function(directory=NULL, filename=NULL, save_dataset = FALSE, save_directory="./", verbose = TRUE){
-  if(save_dataset==TRUE){
-    if(utils::menu(c("yes", "no"),
-                   title="This will save the full imported dataset in the specified directory. Are you sure?")==2){
-      save_dataset <- FALSE
-    }
-  }
+import_results <- function(directory=NULL, filename=NULL, verbose = TRUE){
 
   if(!is.null(directory)){import_files <- paste(directory, list.files(path = directory), sep = "")} else if(!is.null(filename)){import_files <- filename}
   if(is.null(directory) & is.null(filename)){stop("No input given. Either directory or filename needs to be provided.")}
@@ -177,51 +169,25 @@ import_results <- function(directory=NULL, filename=NULL, save_dataset = FALSE, 
 
     df <- synthesisr::read_files(filename)
 
-    # I can't remember why this cleaning step is here, but I'm sure something broke without it
-      if (stringr::str_detect(paste(colnames(df), collapse=" "), "\\.\\.")){
-      temp_cn <- strsplit(as.character(colnames(df)[1]), "\\.\\.")
-      if (length(temp_cn[[1]]) > 1) {
-        dotremoved <- gsub("\\.", "", temp_cn[[1]][2])
-        colnames(df)[1] <- dotremoved
-      }
-    }
-    if(any(colnames(df)=="X")){df <- df[, -which(colnames(df)=="X")]}
-
     if(verbose==TRUE){print(paste("Importing file", import_files[i]))}
 
     if(any(c("bib", "nbib", "ris")==synthesisr::detect_filetype(import_files[i]))){
-      database <- "revtools"
+      df <- revtools::read_bibliography(df)
     } else {
-      database <- synthesisr::detect_database(df)
+    df <- synthesisr::match_columns(df)
     }
 
-    if(database!="Unknown"){
-    import_function <- as.character(synthesisr::databases$import_function[which(synthesisr::databases$database==database)])
-    import_function <- eval(parse(text=import_function))
-    df <- import_function(df)
-    }
+    df <- standardize_df(df)
 
-    if (database != "Unknown") {
-      df$database <- rep(database, nrow(df))
-      df <- standardize_df(df)
-
-      if (i == 1) {
+    if (i == 1) {
         search_hits <- df
       }
       if (i > 1) {
         search_hits <- rbind(search_hits, df)
       }
-    }
 
-    if(database=="Unknown"){
-      print(paste("Warning: Unable to recognize format for", import_files[i]))
-    }
   }
 
-  if (save_dataset == TRUE) {
-    write.csv(search_hits, paste(save_directory, "full_dataset.csv", sep=""))
-    print("Complete dataset written to .csv file.")
-  }
   return(search_hits)
 }
 
