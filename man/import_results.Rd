@@ -4,19 +4,17 @@
 \alias{import_results}
 \title{Import results of a systematic review}
 \usage{
-import_results(directory = NULL, filename = NULL,
-  save_dataset = FALSE, save_directory = "./", verbose = TRUE)
+import_results(directory = NULL, filename = NULL, verbose = TRUE,
+  retain_all_output = FALSE)
 }
 \arguments{
 \item{directory}{a path to a directory containing search results to import}
 
 \item{filename}{a path to a filename containing search results to import}
 
-\item{save_dataset}{if TRUE, saves the full search results to a .csv}
-
-\item{save_directory}{the path to a directory where search results will be saved if save_dataset is set to TRUE}
-
 \item{verbose}{if TRUE, prints status updates}
+
+\item{retain_all_output}{if TRUE, stores each search result as a list entry with original fields; if FALSE, merges all search output to a common 17 bibliographic fields}
 }
 \value{
 a data frame of assembled search results

@@ -10,7 +10,7 @@ standardize_df(df)
 \item{df}{a data frame}
 }
 \value{
-a data frame with standardized columns
+a data frame with standardized columns for first 17 fields, plus other fields specific to the dataset
 }
 \description{
 Given a data frame, checks to see that it contains standard synthesisr fields and fills empty fields.
