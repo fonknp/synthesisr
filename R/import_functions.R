@@ -131,31 +131,13 @@ detect_filetype <- function(file){
 }
 
 
-#' Detects from which database a search originated
-#' @description Determines the database from which a search results file originated, if supported and exported per synthesisr instructions.
-#' @param df a data frame of search results from a single source
-#' @return a character vector specifying the platform and/or database of origin, if known
-detect_database <- function(df){
-  print("Note: This function is now obsolete in v 0.1.1 because of the new flexibility in importing databases.")
-  database <- NULL
-  database_signature <- paste(df[1,], collapse=" ")
-
-  if(any(colnames(df)=="Number.Of.Volumes")){database <- "Zotero_unknown"
-  } else if(paste(colnames(df), collapse=" ")==paste(synthesisr::expected_columns, collapse=" ")){database <- "preformatted"} else if(any(stringr::str_detect(as.character(database_signature), as.character(synthesisr::databases$signature)))){
-    database <- synthesisr::databases$database[which(stringr::str_detect(as.character(database_signature), as.character(synthesisr::databases$signature)))]
-  } else {database <- "Unknown"}
-
-  database <- as.character(database)
-
-  return(database)
-
-}
 
 #' Import results of a systematic review
 #' @description Given a file or directory, imports and assembles search results
 #' @param directory a path to a directory containing search results to import
 #' @param filename a path to a filename containing search results to import
 #' @param verbose if TRUE, prints status updates
+#' @param retain_all_output if TRUE, stores each search result as a list entry with original fields; if FALSE, merges all search output to a common 17 bibliographic fields
 #' @return a data frame of assembled search results
 import_results <- function(directory=NULL, filename=NULL, verbose = TRUE, retain_all_output=FALSE){
 
