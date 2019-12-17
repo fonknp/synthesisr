@@ -68,12 +68,12 @@ read_files <- function(file){
 #' Convert dataframes to standard format
 #' @description Given a data frame, checks to see that it contains standard synthesisr fields and fills empty fields.
 #' @param df a data frame
-#' @return a data frame with standardized columns
+#' @return a data frame with standardized columns for first
 standardize_df <- function(df){
-  checks <- c("id", "text", "title", "abstract", "keywords", "methods", "type", "authors", "affiliation", "source",
-              "year", "volume", "issue", "startpage", "endpage", "doi", "language", "database")
+  checks <- c("id", "text", "title", "abstract", "keywords", "methods", "type", "authors", "affiliation", "journal",
+              "year", "volume", "issue", "pages", "doi", "language", "database")
   for(c in 1:length(checks)){
-    if(stringr::str_detect(paste(colnames(df), collapse=" "), checks[c])==FALSE){
+    if(checks[c] %in% colnames(df)==FALSE){
       if(c==1){df$id <- 1:nrow(df)}
       if(c==2){df$text <- rep("", nrow(df))}
       if(c==3){df$title <- rep("", nrow(df))}
@@ -87,14 +87,14 @@ standardize_df <- function(df){
       if(c==11){df$year <- rep("", nrow(df))}
       if(c==12){df$volume <- rep("", nrow(df))}
       if(c==13){df$issue <- rep("", nrow(df))}
-      if(c==14){df$startpage <- rep("", nrow(df))}
-      if(c==15){df$endpage <- rep("", nrow(df))}
-      if(c==16){df$doi <- rep("", nrow(df))}
-      if(c==17){df$language <- rep("", nrow(df))}
-      if(c==18){df$database <- rep("", nrow(df))}
+      if(c==14){df$pages <- rep("", nrow(df))}
+      if(c==15){df$doi <- rep("", nrow(df))}
+      if(c==16){df$language <- rep("", nrow(df))}
+      if(c==17){df$database <- rep("", nrow(df))}
 
     }
   }
+  not_checked <- df[,-which(colnames(df) %in% checks)]
 
     df[] <- lapply(df, as.character)
     df <- as.data.frame(cbind(id = df$id,
@@ -106,16 +106,16 @@ standardize_df <- function(df){
                               type = df$type,
                               authors = df$authors,
                               affiliation = df$affiliation,
-                              source = df$source,
+                              journal = df$journal,
                               year = df$year,
                               volume = df$volume,
                               issue = df$issue,
-                              startpage = df$startpage,
-                              endpage = df$endpage,
+                              pages = df$pages,
                               doi = df$doi,
                               language = df$language,
                               database = df$database))
     df[] <- lapply(df, as.character)
+    df <- cbind(df, not_checked)
 
     return(df)
 }
@@ -231,7 +231,7 @@ match_columns <- function(df){
   # Thanks for Martin's code in revtools for the idea to use lookups! ...and some of the tag lookups
 
   # figure out which columns match known tags
-  hits <- as.numeric(match(synthesisr::code_lookup$code, colnames(wostest)))
+  hits <- as.numeric(match(synthesisr::code_lookup$code, colnames(df)))
 
   # rearrange data in standard order
   newdat <- df[, hits[!is.na(hits)]]
