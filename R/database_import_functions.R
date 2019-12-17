@@ -2,10 +2,26 @@
 #' @description Imports files to synthesis from a data frame. Intended primarily as a function to be called by import_results()
 #' @param df the data frame to import
 #' @return the data frame with synthesisr formatted columns
-import_revtools <- function(df){
-  df <- as.data.frame(cbind(id=df$label, title=df$title, abstract=df$abstract, keywords=df$keywords, type=df$type, authors=df$author,
-                            affiliation=df$institution, source=df$journal, year=df$year, volume=df$volume, issue=df$issue,
-                            startpage=df$pages, doi=df$doi, language=df$language))
+import_revtools <- function(df) {
+  df <-
+    as.data.frame(
+      cbind(
+        id = df$label,
+        title = df$title,
+        abstract = df$abstract,
+        keywords = df$keywords,
+        type = df$type,
+        authors = df$author,
+        affiliation = df$institution,
+        source = df$journal,
+        year = df$year,
+        volume = df$volume,
+        issue = df$issue,
+        startpage = df$pages,
+        doi = df$doi,
+        language = df$language
+      )
+    )
   df$methods <- rep("", length(df$id))
   df$text <- paste(df$title, df$abstract, sep = " ")
   df$startpage <- as.character(df$startpage)

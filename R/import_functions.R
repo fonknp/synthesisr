@@ -228,5 +228,25 @@ import_results <- function(directory=NULL, filename=NULL, save_dataset = FALSE, 
 
 
 
+match_columns <- function(df){
+  # Thanks for Martin's code in revtools for the idea to use lookups! ...and some of the tag lookups
+
+  # figure out which columns match known tags
+  hits <- as.numeric(match(synthesisr::code_lookup$code, colnames(wostest)))
+
+  # rearrange data in standard order
+  newdat <- df[, hits[!is.na(hits)]]
+
+  # retain columns even if they did not match lookup
+  newcolnames <- synthesisr::code_lookup$field[match(colnames(newdat), synthesisr::code_lookup$code)]
+  newcolnames[which(is.na(newcolnames) | newcolnames=="")] <- colnames(newdat)[which(is.na(newcolnames) | newcolnames=="")]
+  colnames(newdat) <- newcolnames
+
+  # drop duplicate columns that matched more than one tag
+  # often, duplicates are multiple author fields, pages and startpage/endpage, etc
+  newdat <- newdat[,-which(duplicated(colnames(newdat)))]
+
+  return(newdat)
+}
 
 
