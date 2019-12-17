@@ -38,7 +38,7 @@ read_files <- function(file){
     df <- as.character(xml2::read_xml(file))
   }
   if(filetype=="txt") {
-    df <- utils::read.table(file, sep = "\t", header = TRUE,
+    df <- utils::read.delim(file, sep = "\t", header = TRUE,
                      stringsAsFactors = FALSE, fill = TRUE, row.names = NULL)
     if(colnames(df)[1]=="row.names"){
       colnames(df) <- append(colnames(df[2:length(df)]), "X")
@@ -157,7 +157,7 @@ detect_database <- function(df){
 #' @param filename a path to a filename containing search results to import
 #' @param verbose if TRUE, prints status updates
 #' @return a data frame of assembled search results
-import_results <- function(directory=NULL, filename=NULL, verbose = TRUE){
+import_results <- function(directory=NULL, filename=NULL, verbose = TRUE, retain_all_output=FALSE){
 
   if(!is.null(directory)){import_files <- paste(directory, list.files(path = directory), sep = "")} else if(!is.null(filename)){import_files <- filename}
   if(is.null(directory) & is.null(filename)){stop("No input given. Either directory or filename needs to be provided.")}
