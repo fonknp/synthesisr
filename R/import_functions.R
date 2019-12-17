@@ -199,9 +199,10 @@ import_results <- function(directory=NULL, filename=NULL, verbose = TRUE, retain
   } else{return(search_hits)}
 }
 
-
-
-
+#' Match imported data to reference codes
+#' @description Takes an imported dataframe, rearranges it to match lookup codes, and removes redundant columns
+#' @param df a data frame that contains bibliographic information
+#' @return a data frame rearranged and coded to match standard bibliographic fields, with other fields appended
 match_columns <- function(df){
   # Thanks for Martin's code in revtools for the idea to use lookups! ...and some of the tag lookups
 
