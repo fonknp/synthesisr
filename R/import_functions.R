@@ -68,7 +68,7 @@ read_files <- function(file){
 #' Convert dataframes to standard format
 #' @description Given a data frame, checks to see that it contains standard synthesisr fields and fills empty fields.
 #' @param df a data frame
-#' @return a data frame with standardized columns for first
+#' @return a data frame with standardized columns for first 17 fields, plus other fields specific to the dataset
 standardize_df <- function(df){
   checks <- c("id", "text", "title", "abstract", "keywords", "methods", "type", "authors", "affiliation", "journal",
               "year", "volume", "issue", "pages", "doi", "language", "database")
@@ -136,6 +136,7 @@ detect_filetype <- function(file){
 #' @param df a data frame of search results from a single source
 #' @return a character vector specifying the platform and/or database of origin, if known
 detect_database <- function(df){
+  print("Note: This function is now obsolete in v 0.1.1 because of the new flexibility in importing databases.")
   database <- NULL
   database_signature <- paste(df[1,], collapse=" ")
 
