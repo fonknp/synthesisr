@@ -190,12 +190,12 @@ import_results <- function(directory=NULL, filename=NULL, verbose = TRUE, retain
         search_hits <- rbind(search_hits, df[,1:17])
       }
     if(retain_all_output==TRUE){
-      search_lists[[i]] <- df
+      search_list[[i]] <- df
     }
     }
 
   if(retain_all_output==TRUE){
-    return(search_lists)
+    return(search_list)
   } else{return(search_hits)}
 }
 
