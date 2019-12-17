@@ -39,8 +39,7 @@ read_files <- function(file){
   }
   if(filetype=="txt") {
     df <- utils::read.table(file, sep = "\t", header = TRUE,
-                     comment.char = "#", na.strings = ".", stringsAsFactors = FALSE,
-                     quote = "", fill = TRUE, row.names = NULL)
+                     stringsAsFactors = FALSE, fill = TRUE, row.names = NULL)
     if(colnames(df)[1]=="row.names"){
       colnames(df) <- append(colnames(df[2:length(df)]), "X")
     }
