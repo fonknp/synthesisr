@@ -27,8 +27,8 @@ my_directory <- "../inst/extdata/"
 
 search_results <- synthesisr::import_results(directory=my_directory, 
                                              filename = NULL, 
-                                             save_dataset = FALSE, 
-                                             verbose = TRUE)
+                                             verbose = TRUE,
+                                             retain_all_output = FALSE)
 
 first_dedupe <- synthesisr::deduplicate(df=search_results, 
                                         field = "title", 
@@ -57,13 +57,5 @@ any_chimeras <- synthesisr::chimera_detect(second_dedupe$title, overlap = .6)
 ```{r}
 my_dfm <- synthesisr::create_dfm(second_dedupe$abstract, type = "tokens", language="English")
 
-```
-
-## Report search results
-
-
-```{r}
-search_report <- synthesisr::report_results(search_results, "database")
-search_report
 ```
 
